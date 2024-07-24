@@ -91,7 +91,7 @@ export default function Form() {
 
   const [data, setData] = useState<IWeatherData>(initialData);
   const [image, setImage] = useState("");
-  const [message, setMessage] = useState("");
+  const [visible, setVisible] = useState(false);
 
   const schema = Yup.object().shape({
     town: Yup.string()
@@ -107,9 +107,7 @@ export default function Form() {
     validationSchema: schema,
     validateOnChange: false,
     onSubmit: (values: ITown, { resetForm }) => {
-      resetForm();
-
-      fetch(
+      const getWeather = fetch(
         `https://api.openweathermap.org/data/2.5/weather?q=${values.town}&appid=${apiKey}&units=metric`
       )
         .then((res) => {
@@ -124,8 +122,11 @@ export default function Form() {
             setImage(data.weather[0].icon);
           }
         });
+      setVisible(true);
+      resetForm();
     },
   });
+
   return (
     <div className="lesson-container">
       <form onSubmit={formik.handleSubmit} className={styles.townForm}>
@@ -138,12 +139,11 @@ export default function Form() {
           value={formik.values.town}
         />
         <button className={styles.buttonSearch} type="submit">
-          {" "}
           Search
         </button>
       </form>
 
-      <div className={styles.container}>
+      <div className={`${visible ? styles.container: styles.invisible} `} >
         <div className={styles.tempCityCont}>
           <h5 className={styles.temp}> {Math.round(data?.main.temp)}°C</h5>
           <h5 className={styles.city}>{data?.name}</h5>

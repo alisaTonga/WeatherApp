@@ -14,7 +14,7 @@ root.render(
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route path="/weathers" element={<Form />} />
-        <Route path="/" element={<Form />} />
+        <Route path="/" element={<Layout />} />
         <Route path="*" element={<Error />} />
       </Route>
     </Routes>
